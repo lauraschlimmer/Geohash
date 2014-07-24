@@ -17,9 +17,8 @@ class Geohash
 
 private
 
-  #outputs the bit representation 
+  #base 32 -> base 2 
   def decode_base32(string)
-    #base32 to numerical value (input char, output int)
     lookup = { "1" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "b" => 10, 
       "c" => 11, "d" => 12, "e" => 13, "f" => 14, "g" => 15, "h" => 16, "j" => 17, "k" => 18, "m" => 19, "n" => 20, 
       "p" => 21, "q" => 22, "r" => 23, "s" => 24, "t" => 25, "u" => 26, "v" => 27, "w" => 28, "x" => 29, "y" => 30, "z" => 31}
@@ -35,10 +34,8 @@ private
     return arr
   end
 
-  #first idea: input bits as string 
-  #assumption: counting starts at the left side
-  #even bits are taken for the longitude bitstring
-  #odd bits are taken for the latitude bitstring
+ 
+  #counting starts at the left side, even bits are taken for the longitude bitstring, odd bits are taken for the latitude bitstring
   def split_bits(bitstring)
     i = 0
     @long_bitstring = ""
@@ -167,6 +164,8 @@ private
   end
 
 
+  #merge the latitude and longitude bitstring, in doing so the bitstrings characters 
+  #are placed alternately starting with the long bitstring's first character 
   def merge(long_bitstring, lat_bitstring)
     @bitstring = ""
     i = 0
@@ -187,7 +186,7 @@ private
   end
 
 
-  #error handling --> if bitstring.length isn#z divisible by 5 the last bits (the modulo 5 rest) is not taken
+  #error handling --> if bitstring.length isn't divisible by 5 the last bits (the modulo 5 rest) is not taken
   #take the bitstring and split it into strings of 5 bits
   def split_bitstring(bitstring) 
     arr = []
@@ -203,11 +202,11 @@ private
     return arr
   end
 
-
+ #starts at the LSD
   def bin2dec(bytestring)
     num = 0
     exp = 0
-    i = (bytestring.length)-1 #starts at the LSD
+    i = (bytestring.length)-1
     while i >= 0
       num += (bytestring[i].to_i) * 2**exp
       exp += 1
@@ -218,7 +217,7 @@ private
   end
 
 
-  def encode_base32(num) #input e.g. 13 
+  def encode_base32(num) 
     lookup = { 1 => "1", 2 => "2", 3 => "3", 4 => "4", 5 => "5", 6 => "6", 7 => "7", 8 => "8", 9 => "9", 10 => "b",
       11 => "c", 12 => "d", 13 => "e", 14 => "f", 15 => "g", 16 => "h", 17 => "j", 18 => "k", 19 => "m", 20 => "n",
       21 => "p", 22 => "q", 23 => "r", 24 => "s", 25 => "t", 26 => "u", 27 => "v", 28 => "w", 29 => "x", 30 => "y", 31 => "z" }
@@ -237,7 +236,6 @@ private
     puts arr.inspect
     return arr
   end
-  #handle_hash(["11111", "10001"])
 
   def encode_geohash(latitude, longitude)
     lat = encode_lat(latitude, 12)

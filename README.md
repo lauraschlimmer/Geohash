@@ -1,6 +1,6 @@
 <h1>Geohash</h1>
 
-<p>Decode and encode geohashes based on <a href="http://en.wikipedia.org/wiki/Geohash"></a>
+<p>Decode and encode geohashes based on <a href="http://en.wikipedia.org/wiki/Geohash">http://en.wikipedia.org/wiki/Geohash</a>
 </p>
 
 <p><strong>Decode geohash</strong> </br>
