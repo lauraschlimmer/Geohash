@@ -4,13 +4,13 @@
 </p>
 
 <p><strong>Decode geohash</strong> </br>
-	<code >geohash1 = Geohash.new 0, 0, "ezs42" </br>
-	geohash1.geohash_decode</code>
+	<code >geohash1 = Geohash.new 0, 0, "ezs42" </code></br>
+	<code>geohash1.geohash_decode</code>
 </p>
 
 <p><strong>Encode geohash</strong></br>
-	<code>geohash2 = Geohash.new (-5.60302734375), 42.60498046875 </br>
-geohash2.geohash_encode</code>
+	<code>geohash2 = Geohash.new (-5.60302734375), 42.60498046875 </code></br>
+	<code>geohash2.geohash_encode</code>
 </p>
 
 
@@ -21,4 +21,6 @@ geohash2.geohash_encode</code>
 	<li>check if there's a bug when encoding negative lat, long values </li>
 	<li>proper initialize method (parameters as dictionary)</li>
 	<li>implement distance calculation</li>
+	<li>write array functions new</li>
+	<li>initialize with precision and interval boundary</li>
 </ul>

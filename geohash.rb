@@ -52,37 +52,16 @@ private
     return @lat_bitstring
   end
 
-  def decode_lat(lat_bitstring)
-    @lat = 0.0
-    interval = (-90.0 .. 90.0)
-    mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-    mini = interval.min
-    maxi = interval.max
-    lat_bitstring.each_char do |c|
-      if c.to_f == 1
-        interval = (mean .. maxi)
-        mini = mean
-        mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-        maxi = interval.max
-      else 
-        interval = (mini .. mean)
-        mini = interval.min
-        maxi = mean
-        mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-      end
-    end
-    @lat = mean
-    puts "latitude: #{@lat}"
-    return @lat
-  end
 
-  def decode_long(long_bitstring)
-    @long = 0.0
-    interval = (-180.0 .. 180.0)
+#decodes the bitstring reresentation of the latitude's or longitude's bitstring and returns the coordinates as floats
+#interval_bound as positive float, 180.0 for long and 90.0 for lat
+  def decode_bitstring(bitstring, interval_bound)
+    @coord = 0.0
+    interval = (-interval_bound .. interval_bound)
     mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
     mini = interval.min
     maxi = interval.max
-    long_bitstring.each_char do |c|
+    bitstring.each_char do |c|
       if c.to_f == 1
         interval = (mean .. maxi)
         mini = mean
@@ -95,36 +74,37 @@ private
         mini = interval.min
       end
     end
-    @long = mean
-    puts "longitude: #{@long}"
-    return @long
+    @coord = mean
+    return @coord
   end
 
 
   def decode_geohash(bitstring)
     split_bits(decode_base32(bitstring))
-    decode_long(@long_bitstring)
-    decode_lat(@lat_bitstring)
+    @long = decode_bitstring(@long_bitstring, 180.0)
+    puts "longitude: #{@long}"
+    @lat = decode_bitstring(@lat_bitstring, 90.0)
+    puts "latitude: #{@lat}"
   end
 
 
-  #input latitude as float output bitstring
-  def encode_lat(lat, precision=12)
+  #input latitude as float output bitstring, float precision (lat = 12, long = 13)
+  def encode_coord(coord, precision, interval_bound)
     i = 0
-    @lat = ""
-    interval = (-90.0 .. 90.0)
+    @bitstring = ""
+    interval = (-interval_bound .. interval_bound)
     mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
     maxi = interval.max
     mini = interval.min
     while i < precision
-      if lat > mean 
-        @lat += "1"
+      if coord > mean 
+        @bitstring += "1"
         interval = (mean .. maxi)
         mini = mean
         mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
         maxi = interval.max
       else
-        @lat += "0"
+        @bitstring += "0"
         interval = (mini .. mean)
         maxi = mean
         mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
@@ -132,37 +112,8 @@ private
       end
       i += 1
     end
-
-    return @lat
+    return @bitstring
   end
-
-  def encode_long(long, precision=13)
-    i = 0
-    @long = ""
-    interval = (-180.0 .. 180.0)
-    mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-    maxi = interval.max
-    mini = interval.min
-    while i < precision
-      if long > mean 
-        @long += "1"
-        interval = (mean .. maxi)
-        mini = mean
-        mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-        maxi = interval.max
-      else
-        @long += "0"
-        interval = (mini .. mean)
-        maxi = mean
-        mean = interval.min + (((interval.max) - (interval.min)) / 2.0)
-        mini = interval.min
-      end
-      i += 1
-    end
-
-    return @long
-  end
-
 
   #merge the latitude and longitude bitstring, in doing so the bitstrings characters 
   #are placed alternately starting with the long bitstring's first character 
@@ -181,7 +132,6 @@ private
       end
       i += 1
     end
-
     return @bitstring
   end
 
@@ -198,7 +148,6 @@ private
       mini += 5
       max = mini + 4 
     end
-
     return arr
   end
 
@@ -212,7 +161,6 @@ private
       exp += 1
       i -= 1
     end
-
     return num
   end
 
@@ -238,21 +186,21 @@ private
   end
 
   def encode_geohash(latitude, longitude)
-    lat = encode_lat(latitude, 12)
-    long = encode_long(longitude, 13)
+    lat = encode_coord(latitude, 12, 90.0)
+    long = encode_coord(longitude, 13, 180.0)
     bitstring = merge(long, lat)
     puts bitstring
     bitarray = split_bitstring(bitstring)
-    arr = []
-    bitarray.each do |i|
-      arr << (encode_base32(bin2dec(i)))
-    end
-    arr = arr.join("")
-    puts arr.inspect
-    return arr
+    handle_hash(bitarray)
   end
 
 
 end
+
+geohash1 = Geohash.new 0, 0, "ezs42" 
+geohash1.geohash_decode
+
+geohash2 = Geohash.new (-5.60302734375), 42.60498046875 
+geohash2.geohash_encode
 
 
