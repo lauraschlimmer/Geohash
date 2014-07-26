@@ -3,7 +3,7 @@
 <p>Decode and encode geohashes based on <a href="http://en.wikipedia.org/wiki/Geohash">http://en.wikipedia.org/wiki/Geohash</a>
 </p>
 
-<code>
+
 		```ruby
 		#decode a geohash
 		
@@ -17,7 +17,6 @@
 		geohash2.geohash_encode
 
 
-</code>
 </p>
 
 
