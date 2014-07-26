@@ -3,14 +3,21 @@
 <p>Decode and encode geohashes based on <a href="http://en.wikipedia.org/wiki/Geohash">http://en.wikipedia.org/wiki/Geohash</a>
 </p>
 
-<p><strong>Decode geohash</strong> </br>
-	<code >geohash1 = Geohash.new 0, 0, "ezs42" </code></br>
-	<code>geohash1.geohash_decode</code>
-</p>
+<code>
 
-<p><strong>Encode geohash</strong></br>
-	<code>geohash2 = Geohash.new (-5.60302734375), 42.60498046875 </code></br>
-	<code>geohash2.geohash_encode</code>
+		#decode a geohash
+		```
+		geohash1 = Geohash.new 0, 0, "ezs42" 
+		geohash1.geohash_decode
+		```
+
+		#Encode a geohash
+			```
+		geohash2 = Geohash.new (-5.60302734375), 42.60498046875 
+		geohash2.geohash_encode
+		```
+
+</code>
 </p>
 
 
