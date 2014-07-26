@@ -1,5 +1,6 @@
 class Geohash
 
+#dict with parameters -> if isset --> search how to give properties to lat and long like precision and interval_bound
   def initialize(lat = 0, long = 0, geohash= '')
     @lat = lat
     @long = long
@@ -12,6 +13,26 @@ class Geohash
 
   def geohash_decode
     decode_geohash(@geohash)
+  end
+
+  def calculate_distance(geohash1, geohash2)
+    @length = ([geohash1.length, geohash2.length]).min
+    @i = 0
+    @t = 0
+    while @i < @length do
+      if geohash1[@i] == geohash2[@i]
+        @t = @t+1
+        @i = @i+1
+      else
+        @i = @length
+      end
+    end
+    #puts @t
+    #precision => distance from adjacent cell in meters
+    lookup_dist = {1 => 5003530, 2 => 625441, 3 => 123264, 4 => 19545, 5 => 3803, 
+      6 => 610, 7 => 118, 8 => 19, 9 => 3.71, 10 => 0.6}
+    distance = lookup_dist[@t]
+    puts distance
   end
 
 
@@ -170,7 +191,6 @@ private
       11 => "c", 12 => "d", 13 => "e", 14 => "f", 15 => "g", 16 => "h", 17 => "j", 18 => "k", 19 => "m", 20 => "n",
       21 => "p", 22 => "q", 23 => "r", 24 => "s", 25 => "t", 26 => "u", 27 => "v", 28 => "w", 29 => "x", 30 => "y", 31 => "z" }
     @hash = lookup[num]
-
     return @hash
   end
 
@@ -186,13 +206,16 @@ private
   end
 
   def encode_geohash(latitude, longitude)
-    lat = encode_coord(latitude, 12, 90.0)
-    long = encode_coord(longitude, 13, 180.0)
+    lat = encode_coord(latitude, 27, 90.0)
+    long = encode_coord(longitude, 28, 180.0)
     bitstring = merge(long, lat)
     puts bitstring
     bitarray = split_bitstring(bitstring)
     handle_hash(bitarray)
   end
+
+
+
 
 
 end
@@ -202,5 +225,8 @@ geohash1.geohash_decode
 
 geohash2 = Geohash.new (-5.60302734375), 42.60498046875 
 geohash2.geohash_encode
+
+geohash2.calculate_distance("kz3456789", "kzn217zzzzz")
+
 
 
