@@ -4,18 +4,18 @@
 </p>
 
 <code>
-
+		```ruby
 		#decode a geohash
-		```
+		
 		geohash1 = Geohash.new 0, 0, "ezs42" 
 		geohash1.geohash_decode
-		```
+
 
 		#Encode a geohash
-			```
+
 		geohash2 = Geohash.new (-5.60302734375), 42.60498046875 
 		geohash2.geohash_encode
-		```
+
 
 </code>
 </p>
